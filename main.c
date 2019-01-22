@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #define N 4
-#define BUT 3
+#define BUT 2
 
 typedef enum joueur
   {NOIR, BLANC, VIDE}
