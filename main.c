@@ -1,13 +1,16 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define N 4
 #define BUT 3
 
-typedef enum joueur
-  {NOIR, BLANC, VIDE}
-  Joueur;
+#include "joueur.h"
+#include "tableau.h"
+#include "alignement.h"
+#include "liste_alignements.h"
 
-typedef Joueur (Tableau)[N][N];
+
+
 
 
 Joueur
@@ -129,14 +132,15 @@ gagne(Tableau tab)
   return VIDE;
 }
 
+
 int
 main(void)
 {
 
   Tableau tab = {
-		 {VIDE, VIDE, VIDE, NOIR},
-		 {VIDE, VIDE, VIDE, NOIR},
-		 {VIDE, VIDE, NOIR, VIDE},
+		 {VIDE, VIDE, BLANC, NOIR},
+		 {VIDE, BLANC, VIDE, NOIR},
+		 {BLANC, VIDE, NOIR, VIDE},
 		 {VIDE, NOIR, VIDE, VIDE}
   };
   Joueur gagnant = gagne(tab);
@@ -144,5 +148,24 @@ main(void)
   printf("%d %d %d\n", gagnant==NOIR, gagnant==BLANC, gagnant==VIDE);
 
   printf("%d, %d, %d\n", NOIR, BLANC, VIDE);
+
+  printf("LA RAISON N'A PLUS COURS CI-APRÈS\n");
+
+  Alignement align = nouvel_alignement(NOIR, 23);
+  Alignement align1 = nouvel_alignement(NOIR, 3);
+  Alignement align2 = nouvel_alignement(NOIR, 2);
+  Alignement align3 = nouvel_alignement(NOIR, 0);
+  ListeAlignements liste =
+    ajouter_element_liste
+     (ajouter_element_liste
+      (ajouter_element_liste
+       (nouvelle_liste(align), align1),
+       align2),
+      align3);
+
+  print_Alignement(align);
+  printf("\n\n");
+  print_ListeAlignements(liste);
+
   return 0;
 }
