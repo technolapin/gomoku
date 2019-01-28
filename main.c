@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-#define N 4
-#define BUT 3
-
+#include "constantes.h"
 #include "joueur.h"
 #include "tableau.h"
 #include "alignement.h"
@@ -135,6 +134,8 @@ gagne(Tableau tab)
 
 ////////////////////////////////////////////////////////////////////
 
+
+
 void
 trouve_alignements_aux
 ( Joueur* actuel,
@@ -246,14 +247,46 @@ trouve_alignements(Tableau tab)
 }
 
 
+void
+scores_aux(ListeAlignements aligns, int* score_blanc, int* score_noir, int table_des_scores[])
+{
+  if (aligns != NULL)
+    {
+      if (aligns->valeur.couleur == BLANC)
+	{
+	  *score_blanc = table_des_scores[aligns->valeur.nombre-1];
+	}
+      else if (aligns->valeur.couleur == NOIR)
+	{
+	  *score_noir = table_des_scores[aligns->valeur.nombre-1];
+	}
+      else
+	{
+	  printf("ATTENTION: L'alignement est VIDE");
+	}
+      scores_aux(aligns->suivant, score_blanc, score_noir, table_des_scores);
+    }
+}
 
+
+void
+scores(Tableau tab, int* score_blanc, int* score_noir, int table_des_scores[])
+{
+  scores_aux(trouve_alignements(tab), score_blanc, score_noir, table_des_scores);
+}
 
 
 
 int
 main(void)
 {
-
+  int table_des_scores[BUT];
+  table_des_scores[0] = 1;
+  for (int i = 1; i<BUT; i++)
+  {
+    table_des_scores[i] = table_des_scores[i-1]*2;
+  }
+  
   Tableau tab = {
 		 {VIDE,  VIDE, VIDE, VIDE},
 		 {VIDE, BLANC,  VIDE, NOIR},
@@ -268,16 +301,18 @@ main(void)
 
   printf("LA RAISON N'A PLUS COURS CI-APRÈS\n");
 
-  Alignement align = nouvel_alignement(NOIR, 23);
+  Alignement align  = nouvel_alignement(NOIR, 23);
   Alignement align1 = nouvel_alignement(NOIR, 3);
   Alignement align2 = nouvel_alignement(NOIR, 2);
   Alignement align3 = nouvel_alignement(NOIR, 0);
+  
   ListeAlignements liste =
     ajouter_element_liste
      (ajouter_element_liste
       (ajouter_element_liste
        (ajouter_element_liste
-	(nouvelle_liste_vide(), align),
+	(nouvelle_liste_vide(),
+	 align ),
 	align1),
        align2),
       align3);
@@ -289,9 +324,13 @@ main(void)
   printf("FIN DU ZBEUL");
   printf("\n\n");
   print_ListeAlignements(trouve_alignements(tab));
+  printf("\n");
 
-  int argent = 36+150+730+1180+2950+37*100+18*100;
-  printf("ARGENT %d\n", argent);
+  int score_noir = 0;
+  int score_blanc = 0;
+  scores(tab, &score_blanc, &score_noir, table_des_scores);
+  printf("NOIR: %d\nBLANC: %d\n", score_noir, score_blanc);
+
   return 0;
   
 }

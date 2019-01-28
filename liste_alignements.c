@@ -16,6 +16,12 @@ premier_element(ListeAlignements list)
 }
 
 ListeAlignements
+nouvelle_liste_vide(void)
+{
+  return NULL;
+}
+
+ListeAlignements
 nouvelle_liste(Alignement valeur)
 {
   ListeAlignements list = malloc(sizeof(NoeudListeAlignements));

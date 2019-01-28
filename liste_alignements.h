@@ -8,6 +8,9 @@ Alignement
 premier_element(ListeAlignements list);
 
 ListeAlignements
+nouvelle_liste_vide(void);
+
+ListeAlignements
 nouvelle_liste(Alignement valeur);
 
 ListeAlignements
