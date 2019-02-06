@@ -275,6 +275,52 @@ scores(Tableau tab, int* score_blanc, int* score_noir, int table_des_scores[])
   scores_aux(trouve_alignements(tab), score_blanc, score_noir, table_des_scores);
 }
 
+void
+iterator(int *i, int *j)
+{
+  (*i)++;
+  if (*i == N)
+  {
+    *i = 0;
+    (*j)++;
+  }
+}
+
+Arbre
+construit_arborescence(Tableau tab,
+		       Joueur joueur_actuel,
+		       int table_des_scores[],
+		       int profondeur)
+{
+  Arbre noeud = nouvel_arbre_vide();
+  noeud->plateau = clone_tableau(tab);
+  noeud->tour = joueur_actuel;
+  noeud->score_blanc = 0;
+  noeud->score_noir = 0;
+  scores(tab, &noeud->score_blanc, &noeud->score_noir, table_des_scores);
+  if (profondeur > 0)
+  for (int i = 0, j = 0; j < N; iterator(&i, &j))
+    {
+      if (tab[i][j] == VIDE)
+      {
+	Tableau *p_clone = clone_tableau(tab);
+	(*p_clone)[i][j] = joueur_actuel;
+
+	Arbre fils = malloc(sizeof(NoeudArbre));
+	fils = construit_arborescence(*p_clone,
+				      1-joueur_actuel,
+				      table_des_scores,
+				      profondeur-1);
+
+	ajouter_arbre_fils(noeud, fils);
+      }
+    }
+  return noeud;
+}
+
+
+
+
 
 
 int
@@ -335,12 +381,50 @@ main(void)
 
   
   Arbre gerard = nouvel_arbre_vide();
+  printf("avant: %d\n", gerard);
   ajouter_fils(gerard,
 	       &tab,
 	       score_noir,
 	       score_blanc,
 	       NOIR
 	       );
+  ajouter_fils(gerard,
+	       &tab,
+	       score_noir,
+	       score_blanc,
+	       NOIR
+	       );
+  ajouter_fils(gerard,
+	       &tab,
+	       score_noir,
+	       score_blanc,
+	       NOIR
+	       );
+    ajouter_fils(gerard->descendants->arbre,
+	       &tab,
+	       score_noir,
+	       score_blanc,
+	       NOIR
+	       );
+
+  printf("après: %d\n", gerard);
+  printf("AFFICHAGE DE THIERRY L'ARBRE:\n\n");
+
+  afficher_arbre(gerard);
+
+
+  
+  for (int i=0, j = 0; j < N; iterator(&i, &j))
+  {
+    printf("%d %d\n", i, j);
+  }
+
+  printf("%d %d \n", sizeof(Tableau), sizeof(Joueur));
+
+  affiche_tableau(clone_tableau(tab));
+
+  Arbre arborescence = construit_arborescence(tab, NOIR, table_des_scores, 8);
+  afficher_arbre(arborescence);
   return 0;
   
 }

@@ -23,3 +23,14 @@ ajouter_fils(Arbre pere,
 	     int score_noir,
 	     int score_blanc,
 	     Joueur tour);
+
+void
+ajouter_arbre_fils(Arbre pere,
+		   Arbre fils);
+
+
+void
+afficher_liste_arbres(ListeArbres lst);
+
+void
+afficher_arbre(Arbre thierry);
