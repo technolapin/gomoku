@@ -58,3 +58,10 @@ ajouter_fils(Arbre pere,
   arbre_fils -> tour = tour;
 //  pere->descendants
 }
+/*
+void
+afficher_arbre(Arbre thierry)
+{
+  
+}
+*/

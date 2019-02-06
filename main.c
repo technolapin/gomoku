@@ -7,7 +7,7 @@
 #include "tableau.h"
 #include "alignement.h"
 #include "liste_alignements.h"
-
+#include "arbre.h"
 
 
 
@@ -331,6 +331,16 @@ main(void)
   scores(tab, &score_blanc, &score_noir, table_des_scores);
   printf("NOIR: %d\nBLANC: %d\n", score_noir, score_blanc);
 
+  affiche_tableau(tab);
+
+  
+  Arbre gerard = nouvel_arbre_vide();
+  ajouter_fils(gerard,
+	       &tab,
+	       score_noir,
+	       score_blanc,
+	       NOIR
+	       );
   return 0;
   
 }
