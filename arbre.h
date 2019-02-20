@@ -34,3 +34,7 @@ afficher_liste_arbres(ListeArbres lst);
 
 void
 afficher_arbre(Arbre thierry);
+
+ListeArbres
+supprime_premier_fils(ListeArbres fils);
+

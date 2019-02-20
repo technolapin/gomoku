@@ -75,7 +75,7 @@ afficher_arbre(Arbre thierry)
   printf("{");
   if (thierry->plateau != NULL)
   {
-    printf("\n plateau: ");
+    printf("\n plateau:\n");
     affiche_tableau(*(thierry->plateau));
     printf("\n tour: ");
     print_joueur(thierry->tour);
@@ -90,4 +90,14 @@ afficher_arbre(Arbre thierry)
 }
 
 
+ListeArbres
+supprime_premier_fils(ListeArbres fils)
+{
+  if (fils)
+  {
+    ListeArbres suivant = fils->suivant;
+    //free(fils);
+    return suivant;
+  }
+}
 

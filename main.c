@@ -318,7 +318,42 @@ construit_arborescence(Tableau tab,
   return noeud;
 }
 
+int
+tronconne(Arbre arbre, int score, int table_des_scores[])
+{
+  if (arbre -> descendants)
+  {
+    ListeArbres lst_fils;
+    
+    Arbre meilleur_fils = arbre->descendants->arbre;
 
+    for (lst_fils = arbre->descendants;
+	 lst_fils != NULL;
+	 lst_fils = lst_fils->suivant)
+    { 
+      int score_fils = tronconne(lst_fils->arbre, score, table_des_scores);
+      if (score_fils > score)
+      {
+	meilleur_fils = lst_fils;
+        score = score_fils;
+      }
+      else
+      {
+	lst_fils = supprime_premier_fils(lst_fils);
+      }
+     
+    }
+    return score;
+    
+  }
+  else
+  {
+    int score_noir = 0;
+    int score_blanc = 0;
+    scores(*(arbre->plateau), &score_blanc, &score_noir, table_des_scores);
+    return score_noir-score_blanc;
+  }
+}
 
 
 
@@ -335,9 +370,9 @@ main(void)
   
   Tableau tab = {
 		 {VIDE,  VIDE, VIDE, VIDE},
-		 {VIDE, BLANC,  VIDE, NOIR},
-		 {BLANC,  VIDE,  NOIR, BLANC},
-		 {VIDE,  NOIR,  BLANC, VIDE}
+		 {VIDE, VIDE,  VIDE, VIDE},
+		 {VIDE,  VIDE,  VIDE, VIDE},
+		 {VIDE,  VIDE,  VIDE, VIDE}
   };
   Joueur gagnant = gagne(tab);
 
@@ -423,8 +458,15 @@ main(void)
 
   affiche_tableau(clone_tableau(tab));
 
-  Arbre arborescence = construit_arborescence(tab, NOIR, table_des_scores, 8);
+  Arbre arborescence = construit_arborescence(tab, NOIR, table_des_scores, 5);
+  //afficher_arbre(arborescence);
+
+  int score = 0;
+  printf("\n\n\n%d\n", tronconne(arborescence, 0, table_des_scores));
   afficher_arbre(arborescence);
+
+  while (1);
+  
   return 0;
   
 }
