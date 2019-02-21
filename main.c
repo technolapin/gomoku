@@ -355,6 +355,20 @@ tronconne(Arbre arbre,
   }
 }
 
+void
+entre_coordonnees(int *i, int *j, Tableau tab)
+{
+  printf("x: ");
+  scanf("%d", i);
+  printf("y: ");
+  scanf("%d", j);
+  if (*i < 0 || *i > N || *j < 0 || *j > N || tab[*i][*j]!=VIDE)
+  {
+    printf("Coordonnées invalides\n");
+    entre_coordonnees(i, j, tab);
+  }
+}
+
 
 
 Tableau*
@@ -401,138 +415,40 @@ main(void)
   }
   
   Tableau tab = {
-		 {BLANC,  NOIR,  BLANC,  VIDE},
 		 {VIDE,  VIDE,  VIDE,  VIDE},
-		 {NOIR,  BLANC,  NOIR,  NOIR},
-		 {NOIR,  BLANC,  NOIR,  BLANC}
+		 {VIDE,  VIDE,  VIDE,  VIDE},
+		 {VIDE,  VIDE,  VIDE,  VIDE},
+		 {VIDE,  VIDE,  VIDE,  VIDE}
   };
-  /*
-  Joueur gagnant = gagne(tab);
-
-  printf("%d %d %d\n", gagnant==NOIR, gagnant==BLANC, gagnant==VIDE);
-
-  printf("%d, %d, %d\n", NOIR, BLANC, VIDE);
-
-  printf("LA RAISON N'A PLUS COURS CI-APRÈS\n");
-
-  Alignement align  = nouvel_alignement(NOIR, 23);
-  Alignement align1 = nouvel_alignement(NOIR, 3);
-  Alignement align2 = nouvel_alignement(NOIR, 2);
-  Alignement align3 = nouvel_alignement(NOIR, 0);
-  
-  ListeAlignements liste =
-    ajouter_element_liste
-     (ajouter_element_liste
-      (ajouter_element_liste
-       (ajouter_element_liste
-	(nouvelle_liste_vide(),
-	 align ),
-	align1),
-       align2),
-      align3);
-
-  print_Alignement(align);
-  printf("\n\n");
-  print_ListeAlignements(liste);
-  printf("\n\n");
-  printf("FIN DU ZBEUL");
-  printf("\n\n");
-  print_ListeAlignements(trouve_alignements(tab));
-  printf("\n");
-
-  int score_noir = 0;
-  int score_blanc = 0;
-  scores(tab, &score_blanc, &score_noir, table_des_scores);
-  printf("NOIR: %d\nBLANC: %d\n", score_noir, score_blanc);
-
-  affiche_tableau(tab);
-
-  
-  Arbre gerard = nouvel_arbre_vide();
-  printf("avant: %d\n", gerard);
-  ajouter_fils(gerard,
-	       &tab,
-	       score_noir,
-	       score_blanc,
-	       NOIR
-	       );
-  ajouter_fils(gerard,
-	       &tab,
-	       score_noir,
-	       score_blanc,
-	       NOIR
-	       );
-  ajouter_fils(gerard,
-	       &tab,
-	       score_noir,
-	       score_blanc,
-	       NOIR
-	       );
-    ajouter_fils(gerard->descendants->arbre,
-	       &tab,
-	       score_noir,
-	       score_blanc,
-	       NOIR
-	       );
-
-  printf("après: %d\n", gerard);
-  printf("AFFICHAGE DE THIERRY L'ARBRE:\n\n");
-
-  afficher_arbre(gerard);
-
-
-  
-  for (int i=0, j = 0; j < N; iterator(&i, &j))
+  Tableau *plateau = &tab;
+  int i=-1;
+  int j=-1;
+  Joueur gagnant = VIDE;
+  while (1)
   {
-    printf("%d %d\n", i, j);
-  }
+    printf("\nTOUR DES BLANCS \n");
+    entre_coordonnees(&i,&j, *plateau);
+    (*plateau)[i][j] = BLANC;
+    affiche_tableau(*plateau);
 
-  printf("%d %d \n", sizeof(Tableau), sizeof(Joueur));
-
-  affiche_tableau(clone_tableau(tab));
-
-  Arbre arborescence = construit_arborescence(tab, NOIR, table_des_scores, 3);
-  afficher_arbre(arborescence);
-
-  printf("\n\n\n%d\n", tronconne(arborescence, 0, table_des_scores));
-  
-  //supprime_arbre(&arborescence);
-
-  printf("BRANCHES:\n");
-  ListeArbres lst = arborescence->descendants;
-  int score;
-  int score_max
-    = tronconne(lst->arbre,
-		0,
-		table_des_scores);
-  Tableau *plateau_max = lst->arbre->plateau;
-  for (;
-       lst;
-       lst = lst->suivant)
-  {
-    score = tronconne(lst->arbre,
-		      0,
-		      table_des_scores);
-    if (score_max < score)
+    gagnant = gagne(*plateau);
+    if (gagnant == BLANC)
     {
-      score_max = score;
-      plateau_max = (lst->arbre->plateau);
+      printf("Vous avez gagné!\n");
+      return 0;
     }
-    printf("%d \n", score);
-    printf("\n");
+    
+    printf("\nTOUR DES NOIRS \n");
+    plateau = meilleur_coup(*plateau, 6, table_des_scores);
+    affiche_tableau(*plateau);
+    gagnant = gagne(*plateau);
+    if (gagnant == NOIR)
+    {
+      printf("Vous avez perdu!\n");
+      return 0;
+    }
   }
-  Tableau *meilleur = clone_tableau(*plateau_max);
-  affiche_tableau(tab);
-  printf("\n");
-  affiche_tableau(*meilleur);
-  
-  */
-
-  affiche_tableau(tab);
-  printf("\n");
-  
-  affiche_tableau(*meilleur_coup(tab, 6, table_des_scores));
-  
+  print_joueur(gagnant);
   return 0;
   
 }
