@@ -424,6 +424,8 @@ main(void)
   int i=-1;
   int j=-1;
   Joueur gagnant = VIDE;
+  printf("ENTREZ LES COORDONNEES DE VOTRE COUP POUR JOUER\n");
+  affiche_tableau(*plateau);
   while (1)
   {
     printf("\nTOUR DES BLANCS \n");
