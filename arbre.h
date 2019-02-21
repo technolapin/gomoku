@@ -38,3 +38,5 @@ afficher_arbre(Arbre thierry);
 ListeArbres
 supprime_premier_fils(ListeArbres fils);
 
+void
+supprime_arbre(Arbre *robert);

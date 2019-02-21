@@ -7,9 +7,12 @@ void
 print_joueur(Joueur couleur)
 {
   if (couleur == NOIR)
-    printf("NOIR");
+    printf("NOIR ");
   else if (couleur == BLANC)
     printf("BLANC");
+  else if (couleur == VIDE)
+    printf("VIDE ");
   else
-    printf("VIDE");
+    printf("ERRR ");
+
 }

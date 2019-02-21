@@ -254,11 +254,11 @@ scores_aux(ListeAlignements aligns, int* score_blanc, int* score_noir, int table
     {
       if (aligns->valeur.couleur == BLANC)
 	{
-	  *score_blanc = table_des_scores[aligns->valeur.nombre-1];
+	  *score_blanc += table_des_scores[aligns->valeur.nombre-1];
 	}
       else if (aligns->valeur.couleur == NOIR)
 	{
-	  *score_noir = table_des_scores[aligns->valeur.nombre-1];
+	  *score_noir += table_des_scores[aligns->valeur.nombre-1];
 	}
       else
 	{
@@ -317,44 +317,76 @@ construit_arborescence(Tableau tab,
     }
   return noeud;
 }
-
+ 
 int
-tronconne(Arbre arbre, int score, int table_des_scores[])
+tronconne(Arbre arbre,
+	  int score,
+	  int table_des_scores[])
 {
   if (arbre -> descendants)
   {
     ListeArbres lst_fils;
-    
-    Arbre meilleur_fils = arbre->descendants->arbre;
-
+    int score_fils;
     for (lst_fils = arbre->descendants;
-	 lst_fils != NULL;
+	 lst_fils;
 	 lst_fils = lst_fils->suivant)
-    { 
-      int score_fils = tronconne(lst_fils->arbre, score, table_des_scores);
-      if (score_fils > score)
+    {
+      score_fils =
+	tronconne(lst_fils->arbre,
+		  score,
+		  table_des_scores);
+      
+      if (arbre->tour == NOIR)
       {
-	meilleur_fils = lst_fils;
-        score = score_fils;
+	if (score_fils > score)
+	  score = score_fils;
       }
       else
       {
-	lst_fils = supprime_premier_fils(lst_fils);
+	if (score_fils < score)
+	  score = score_fils;
       }
-     
     }
     return score;
-    
   }
   else
   {
-    int score_noir = 0;
-    int score_blanc = 0;
-    scores(*(arbre->plateau), &score_blanc, &score_noir, table_des_scores);
-    return score_noir-score_blanc;
+    return arbre->score_noir - arbre->score_blanc;
   }
 }
 
+
+
+Tableau*
+meilleur_coup(Tableau tab, int profondeur, int table_des_scores[])
+{
+  Arbre arborescence = construit_arborescence(tab, NOIR, table_des_scores, profondeur);
+
+
+  ListeArbres lst = arborescence->descendants;
+  int score;
+  int score_max
+    = tronconne(lst->arbre,
+		0,
+		table_des_scores);
+  Tableau *plateau_max = lst->arbre->plateau;
+  for (;
+       lst;
+       lst = lst->suivant)
+  {
+    score = tronconne(lst->arbre,
+		      0,
+		      table_des_scores);
+    if (score_max < score)
+    {
+      score_max = score;
+      plateau_max = (lst->arbre->plateau);
+    }
+  }
+  Tableau *meilleur = clone_tableau(*plateau_max);
+  supprime_arbre(&arborescence);
+  return meilleur;
+}
 
 
 
@@ -369,11 +401,12 @@ main(void)
   }
   
   Tableau tab = {
-		 {VIDE,  VIDE, VIDE, VIDE},
-		 {VIDE, VIDE,  VIDE, VIDE},
-		 {VIDE,  VIDE,  VIDE, VIDE},
-		 {VIDE,  VIDE,  VIDE, VIDE}
+		 {BLANC,  NOIR,  BLANC,  VIDE},
+		 {VIDE,  VIDE,  VIDE,  VIDE},
+		 {NOIR,  BLANC,  NOIR,  NOIR},
+		 {NOIR,  BLANC,  NOIR,  BLANC}
   };
+  /*
   Joueur gagnant = gagne(tab);
 
   printf("%d %d %d\n", gagnant==NOIR, gagnant==BLANC, gagnant==VIDE);
@@ -458,15 +491,49 @@ main(void)
 
   affiche_tableau(clone_tableau(tab));
 
-  Arbre arborescence = construit_arborescence(tab, NOIR, table_des_scores, 5);
-  //afficher_arbre(arborescence);
-
-  int score = 0;
-  printf("\n\n\n%d\n", tronconne(arborescence, 0, table_des_scores));
+  Arbre arborescence = construit_arborescence(tab, NOIR, table_des_scores, 3);
   afficher_arbre(arborescence);
 
-  while (1);
+  printf("\n\n\n%d\n", tronconne(arborescence, 0, table_des_scores));
+  
+  //supprime_arbre(&arborescence);
+
+  printf("BRANCHES:\n");
+  ListeArbres lst = arborescence->descendants;
+  int score;
+  int score_max
+    = tronconne(lst->arbre,
+		0,
+		table_des_scores);
+  Tableau *plateau_max = lst->arbre->plateau;
+  for (;
+       lst;
+       lst = lst->suivant)
+  {
+    score = tronconne(lst->arbre,
+		      0,
+		      table_des_scores);
+    if (score_max < score)
+    {
+      score_max = score;
+      plateau_max = (lst->arbre->plateau);
+    }
+    printf("%d \n", score);
+    printf("\n");
+  }
+  Tableau *meilleur = clone_tableau(*plateau_max);
+  affiche_tableau(tab);
+  printf("\n");
+  affiche_tableau(*meilleur);
+  
+  */
+
+  affiche_tableau(tab);
+  printf("\n");
+  
+  affiche_tableau(*meilleur_coup(tab, 6, table_des_scores));
   
   return 0;
   
 }
+

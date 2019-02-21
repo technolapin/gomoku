@@ -75,7 +75,8 @@ afficher_arbre(Arbre thierry)
   printf("{");
   if (thierry->plateau != NULL)
   {
-    printf("\n plateau:\n");
+    printf("\n Noir: %d   Blanc: %d", thierry->score_noir, thierry->score_blanc);
+    printf("\nplateau:\n");
     affiche_tableau(*(thierry->plateau));
     printf("\n tour: ");
     print_joueur(thierry->tour);
@@ -96,8 +97,30 @@ supprime_premier_fils(ListeArbres fils)
   if (fils)
   {
     ListeArbres suivant = fils->suivant;
-    //free(fils);
+    free(fils->arbre);
     return suivant;
   }
 }
 
+int
+supprime_tete(ListeArbres *lst)
+{
+  if (*lst)
+  {
+    supprime_arbre(&(**lst).arbre);
+    ListeArbres suivant = (**lst).suivant;
+    free(*lst);
+    *lst = suivant;
+    return 1;
+  }
+  else
+    return 0;
+}
+
+void
+supprime_arbre(Arbre *robert)
+{
+  while(supprime_tete(&((*robert)->descendants)));
+  free((*robert)->plateau);
+  free((*robert));
+}
