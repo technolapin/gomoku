@@ -1,7 +1,5 @@
 #include <stdio.h>
-typedef enum joueur
-  {NOIR, BLANC, VIDE}
-  Joueur;
+#include "joueur.h"
 
 void
 print_joueur(Joueur couleur)
