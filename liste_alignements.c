@@ -2,12 +2,7 @@
 #include <stdlib.h>
 #include "joueur.h"
 #include "alignement.h"
-
-typedef struct _noeud_liste_align
-{
-  Alignement valeur;
-  struct _noeud_liste_align* suivant;
-} NoeudListeAlignements, *ListeAlignements;
+#include "liste_alignements.h"
 
 Alignement
 premier_element(ListeAlignements list)
