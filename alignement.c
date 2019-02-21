@@ -1,11 +1,6 @@
 #include <stdio.h>
 #include "joueur.h"
-
-typedef struct alignement
-{
-  Joueur couleur;
-     int nombre;
-} Alignement;
+#include "alignement.h"
 
 
 Alignement
