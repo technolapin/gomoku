@@ -1,3 +1,3 @@
-#define N 4
-#define BUT 3
+#define N 8
+#define BUT 5
 
