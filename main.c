@@ -415,10 +415,14 @@ main(void)
   }
   
   Tableau tab = {
-		 {VIDE,  VIDE,  VIDE,  VIDE},
-		 {VIDE,  VIDE,  VIDE,  VIDE},
-		 {VIDE,  VIDE,  VIDE,  VIDE},
-		 {VIDE,  VIDE,  VIDE,  VIDE}
+		 {VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE},
+		 {VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE},
+		 {VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE},
+	  	 {VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE},
+	  	 {VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE},
+	  	 {VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE},
+	 	 {VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE},
+		 {VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE,  VIDE}
   };
   Tableau *plateau = &tab;
   int i=-1;
@@ -441,7 +445,7 @@ main(void)
     }
     
     printf("\nTOUR DES NOIRS \n");
-    plateau = meilleur_coup(*plateau, 6, table_des_scores);
+    plateau = meilleur_coup(*plateau, 3, table_des_scores);
     affiche_tableau(*plateau);
     gagnant = gagne(*plateau);
     if (gagnant == NOIR)
